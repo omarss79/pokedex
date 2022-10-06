@@ -73,58 +73,13 @@ async function createCardPokemon(pokemon_data) {
 }
 
 async function showPokemon(cards) {
-
-        const getParentElement = document.getElementById('bs-pricing');
-
-        const createContainer = document.createElement('div');
-        createContainer.classList.add('container');
-
-        createContainer.innerHTML =`<div class="col-md-12">
-                                        <div class="row">
-                                            <div id="containerElements" class="bs-pricing-table-two text-center"></div>
-                                        </div>
-                                    </div>`;
-        getParentElement.appendChild(createContainer);
-
         const getContainerElement = document.getElementById('containerElements');
-        cards += `<a href="#" id="btnShowMore" class="btn btn-more text-uppercase">Show more</a>`
-        getContainerElement.innerHTML = cards;
-
-
-        // let retirarBtn = document.getElementById("retirarBtn");
-        // let retirarInput = document.getElementById("retirarInput");
-        // retirarBtn.addEventListener('click', function(e) {
-        //     let importe = parseInt(retirarInput.value);
-        //     if(importe >= 1 && importe <= 990){
-        //         let saldoFuturo = SaldoTerminal.saldoActual() - importe;
-        //         console.log("Saldo futuro: " + saldoFuturo);
-        //         if(saldoFuturo >= 10){
-        //             if(importe%5 == 0){
-        //                 const fecha = SaldoTerminal.obtenerFechaActual();
-        //                 let retiro = {
-        //                     user_id: IndexTerminal.logged_client,
-        //                     fecha: fecha,
-        //                     importe: importe,
-        //                     tipo_movto:  'retiro'
-        //                 };
-        //                 if(movimientosList.push(retiro)){
-        //                     let item = clientesList.find(client => client.id == IndexTerminal.logged_client);
-        //                     item.saldo += parseInt(importe);
-        //                     RetiroTerminal.successEntry(importe);
-        //                 } //else RetiroTerminal.errorEntry();    
-        //                 console.log("Retiro: " + JSON.stringify(movimientosList));
-        //             }  else retirarAlertResiduo.style.display = 'block';
-        //         }  else retirarAlertSaldo.style.display = 'block';
-        //     }  else retirarAlert.style.display = 'block';
-        // });
-
-    
+        getContainerElement.insertAdjacentHTML('beforeend', cards);
 }
-  
-async function asyncCall() {
 
-    // GET POKEMONS
-    const url = "https://pokeapi.co/api/v2/pokemon";
+var URL_LIST = "https://pokeapi.co/api/v2/pokemon";
+  
+async function asyncCall(url) {
     const data = await getData(url)
     .then((data) => {
         return data;    
@@ -135,15 +90,20 @@ async function asyncCall() {
     console.log(data);
 
     // CREATE CARDS
-    const cards = await getDetails(data.results)
-    
+    const cards = await getDetails(data.results);
+
     // SHOW CARDS
     await showPokemon(cards);
+    
+    URL_LIST = data.next;
 }
-  
-
-  
 
 document.body.onload = function() {
-    asyncCall();
+    asyncCall(URL_LIST);
 }
+
+
+let showMoreBtn = document.getElementById("btnShowMore");
+showMoreBtn.addEventListener('click', function(e) {
+    asyncCall(URL_LIST);
+});

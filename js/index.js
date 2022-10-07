@@ -66,7 +66,7 @@ async function createCardPokemon(pokemon_data) {
                             <li>Height: ${pokemon_data.height}</li>
                             <li>Weight: ${pokemon_data.weight}</li>
                         </ul>
-                        <a href="#" class="btn btn-primary text-uppercase">Show details</a>
+                        <button type="button" id="myBtn_${pokemon_data.name}" onClick="showPokemonDetails('${pokemon_data.name}', ${pokemon_data.id});" class="btn btn-primary btn-lg"> Show details </button>
                     </div>
                 </div>`;
     return cardPokemon;
@@ -94,7 +94,7 @@ async function asyncCall(url) {
 
     // SHOW CARDS
     await showPokemon(cards);
-    
+
     URL_LIST = data.next;
 }
 
@@ -102,8 +102,43 @@ document.body.onload = function() {
     asyncCall(URL_LIST);
 }
 
+// MODAL SHOW DETAILS
 
 let showMoreBtn = document.getElementById("btnShowMore");
 showMoreBtn.addEventListener('click', function(e) {
     asyncCall(URL_LIST);
 });
+
+async function showPokemonDetails(pokemon, id){
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("myBtn_"+pokemon);
+    modal.style.display = "block";
+    // console.log("myBtn_"+pokemon);
+
+    let card = await getSinglePokemonDetails(pokemon);
+    let modalCard = document.getElementById("modalCardPokemon");
+    // console.log(card);
+    modalCard.innerHTML=card;
+    document.getElementById("modalContent").style.height = "80%";
+    document.getElementById("modalContent").style.width = "80%";
+    // var modalContent = document.getElementsByClassName("modal-content");
+    // modalContent.style.height  = "100%";
+
+}
+
+
+let closeModalSpan = document.getElementById("closeModal");
+closeModalSpan.addEventListener('click', function(e) {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+});
+
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    var modal = document.getElementById("myModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}

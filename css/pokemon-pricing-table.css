@@ -275,3 +275,18 @@ body {
     text-decoration: none;
     cursor: pointer;
   }
+
+  /*** Spinner ***/
+#spinner {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    z-index: 99999;
+}
+
+#spinner.show {
+    transition: opacity .5s ease-out, visibility 0s linear 0s;
+    visibility: visible;
+    opacity: 1;
+    background-color: rgba(255,255,255,0.7);
+}
